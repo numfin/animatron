@@ -4,7 +4,7 @@ const chars = defaultText.split('')
 const maxChangedLetters = defaultText.length / 2;
 
 function randomInt(min, max) {
-  return Math.round(Math.random() * max + min)
+  return Math.round(Math.random() * (max - min) + min)
 }
 function randomAscii() {
   return String.fromCharCode(randomInt(60, 126))
