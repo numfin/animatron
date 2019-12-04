@@ -13,14 +13,39 @@ function randomAscii() {
 function getRandomLetters(t) {
   const letters = {};
   for (let i = 0; i < randomInt(0, maxChangedLetters); i++) {
+
     letters[randomInt(0, t.length - 1)] = randomAscii()
   }
   return letters;
 }
 
-function animate() {
-  const generatedLetters = getRandomLetters(defaultText)
-  el.innerHTML = chars.map((char, pos) => generatedLetters[pos] ? generatedLetters[pos] : char).join('')
-  setTimeout(animate, randomInt(20, 300))
+function setLetters(generatedLetters = {}) {
+  el.innerHTML = chars.map((char, pos) => {
+    if (generatedLetters[pos]) {
+      const opacity = (randomInt(20, 60) / 100).toPrecision(1);
+      return `<span style="opacity:${opacity};">${generatedLetters[pos]}</span>`
+    }
+    return `<span>${char}</span>`
+  }).join('')
 }
-animate();
+
+let stopped = false;
+
+function animate() {
+  if (stopped) {
+    return
+  }
+  setLetters(getRandomLetters(defaultText))
+  setTimeout(animate, 40)
+}
+
+function launch() {
+  stopped = false;
+  animate();
+  setTimeout(() => {
+    stopped = true;
+    setLetters()
+    setTimeout(launch, 1000)
+  }, 400)
+}
+launch();
